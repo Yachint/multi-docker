@@ -1,0 +1,24 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t yachint/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true yachint/react-test npm run test
+    
+after_success: 
+  - docker build -t yachint/multi-client ./client
+  - docker build -t yachint/multi-nginx ./nginx
+  - docker build -t yachint/multi-server ./server
+  - docker build -t yachint/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push yachint/multi-client
+  - docker push yachint/multi-nginx
+  - docker push yachint/multi-server
+  - docker push yachint/multi-worker
+    
+        
