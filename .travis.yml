@@ -20,5 +20,6 @@ after_success:
   - docker push yachint/multi-nginx
   - docker push yachint/multi-server
   - docker push yachint/multi-worker
+  # Done!
     
         
